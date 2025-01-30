@@ -77,4 +77,26 @@ const deleteAPI = async (
   return data;
 };
 
-export { postAPI, getAPI, deleteAPI };
+const putAPI = async (
+  URL,
+  body,
+  headers = { "Content-Type": "application/json" }
+) => {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
+    method: "PUT",
+    headers: headers,
+    body: JSON.stringify(body),
+    cache: "no-store",
+  })
+    .then((res) => {
+      if (res.redirected) {
+      } else {
+        return res.json();
+      }
+    })
+    .catch((err) => console.log(err));
+
+  return data;
+};
+
+export { postAPI, getAPI, deleteAPI , putAPI};
