@@ -1,5 +1,5 @@
 "use client";
-import { getAPI, postAPI } from "@/services/fetchAPI";
+import { getAPI, postAPI ,deleteAPI} from "@/services/fetchAPI";
 import { useEffect, useState } from "react";
 import { FaMinusCircle } from "react-icons/fa";
 
@@ -38,10 +38,19 @@ export default function Home() {
     getAPI("/todos").then((data) => setTodos(data));
   }, []);
 
-
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteAPI("/todos", { id });
+      if (response) {
+        setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+      }
+    } catch (error) {
+      console.error("Todo silinirken hata oluştu:", error);
+    }
+  };
 
   return (
-    <div>
+    <div className="bg-slate-300 min-h-screen">
       <div className="flex justify-center items-center flex-col pt-4">
         <input
           className="p-2 border-solid border-b-2 border-gray-500 w-1/3 max-lg:w-2/3"
@@ -67,9 +76,7 @@ export default function Home() {
                 <p>{todo.description}</p>
                 <div className="flex gap-x-2 text-xl">
                   <FaMinusCircle
-                    onClick={() => {
-                      console.log("Silme işlemi yapılacak.");
-                    }}
+                    onClick={() => handleDelete(todo.id)}
                     className="cursor-pointer"
                   />
                 </div>
